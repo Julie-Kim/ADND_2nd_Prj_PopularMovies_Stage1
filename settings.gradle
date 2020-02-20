@@ -1,0 +1,2 @@
+include ':app'
+rootProject.name='ADND_2nd_Prj_PopularMovies_Stage1'
