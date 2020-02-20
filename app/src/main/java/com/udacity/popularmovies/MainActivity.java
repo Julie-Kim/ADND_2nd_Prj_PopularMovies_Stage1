@@ -3,7 +3,6 @@ package com.udacity.popularmovies;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -12,8 +11,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private static final int DEFAULT_COLOMN_COUNT = 2;
-    //TODO: private static final int DEFAULT_POSTER_WIDTH = 540;
+    private static final int DEFAULT_POSTER_WIDTH = 540;
 
     private RecyclerView mMovieRecyclerView;
     private MovieAdapter mMovieAdapter;
@@ -30,8 +28,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         //TODO: TextView - error message
         //TODO: ProgressBar = loading indicator
 
-        //TODO: AutoFitGridLayoutManager layoutManager = new AutoFitGridLayoutManager(this, DEFAULT_POSTER_WIDTH);
-        GridLayoutManager layoutManager = new GridLayoutManager(this, DEFAULT_COLOMN_COUNT);
+        AutoFitGridLayoutManager layoutManager = new AutoFitGridLayoutManager(this, DEFAULT_POSTER_WIDTH);
         mMovieRecyclerView.setLayoutManager(layoutManager);
         mMovieRecyclerView.setHasFixedSize(true);
 
