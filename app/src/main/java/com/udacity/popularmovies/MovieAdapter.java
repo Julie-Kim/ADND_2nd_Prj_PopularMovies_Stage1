@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
+import com.udacity.popularmovies.model.Movie;
 import com.udacity.popularmovies.utilities.MovieDataUtils;
 
 import java.util.ArrayList;
@@ -21,10 +22,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     private final MovieAdapterOnClickHandler mClickHandler;
 
     public interface MovieAdapterOnClickHandler {
-        void onClick(String movie);
+        void onClick(Movie movie);
     }
 
-    private ArrayList<String> mMoviePosterPath = new ArrayList<>();
+    private ArrayList<Movie> mMovieList = new ArrayList<>();
 
     MovieAdapter(MovieAdapterOnClickHandler clickHandler) {
         mClickHandler = clickHandler;
@@ -42,7 +43,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
         @Override
         public void onClick(View v) {
-            String movie = mMoviePosterPath.get(getAdapterPosition());
+            Movie movie = mMovieList.get(getAdapterPosition());
+            Log.d(TAG, "onClick(), clicked movie: " + movie.getTitle());
+
             mClickHandler.onClick(movie);
         }
     }
@@ -57,7 +60,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public void onBindViewHolder(@NonNull MovieAdapterViewHolder holder, int position) {
-        String posterPath = MovieDataUtils.getMoviePosterFullPath(mMoviePosterPath.get(position));
+        String posterPath = MovieDataUtils.getMoviePosterFullPath(mMovieList.get(position).getPosterPath());
         Log.d(TAG, "onBindViewHolder() posterPath: " + posterPath);
 
         Picasso.get()
@@ -71,15 +74,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public int getItemCount() {
-        if (mMoviePosterPath.isEmpty()) {
+        if (mMovieList.isEmpty()) {
             return 0;
         }
-        return mMoviePosterPath.size();
+        return mMovieList.size();
     }
 
-    void setMovieData(ArrayList<String> moviePosterPath) {
-        mMoviePosterPath.clear();
-        mMoviePosterPath.addAll(moviePosterPath);
+    void setMovieData(ArrayList<Movie> movieList) {
+        mMovieList.clear();
+        mMovieList.addAll(movieList);
+
         notifyDataSetChanged();
     }
 }
