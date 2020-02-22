@@ -5,15 +5,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.udacity.popularmovies.model.Movie;
 import com.udacity.popularmovies.utilities.MovieDataUtils;
 
 import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder> {
 
@@ -33,12 +38,25 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     public class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        @BindView(R.id.iv_movie_poster)
         ImageView mMovieImageView;
+
+        @BindView(R.id.pb_image_loading_indicator)
+        ProgressBar mImageLoadingIndicator;
 
         MovieAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
-            mMovieImageView = itemView.findViewById(R.id.movie_poster_image);
+            ButterKnife.bind(this, itemView);
+
             itemView.setOnClickListener(this);
+        }
+
+        void showOrHideLoadingIndicator(boolean show) {
+            if (show) {
+                mImageLoadingIndicator.setVisibility(View.VISIBLE);
+            } else {
+                mImageLoadingIndicator.setVisibility(View.INVISIBLE);
+            }
         }
 
         @Override
@@ -60,16 +78,37 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public void onBindViewHolder(@NonNull MovieAdapterViewHolder holder, int position) {
-        String posterPath = MovieDataUtils.getMoviePosterFullPath(mMovieList.get(position).getPosterPath());
+        Movie movie = mMovieList.get(position);
+        String posterPath = MovieDataUtils.getMoviePosterFullPath(movie.getPosterPath());
         Log.d(TAG, "onBindViewHolder() posterPath: " + posterPath);
+
+        holder.showOrHideLoadingIndicator(true);
 
         Picasso.get()
                 .load(posterPath)
                 .fit()
-                .into(holder.mMovieImageView//,
-                        //TODO: add callback - ImageLoadedCallback
+                .placeholder(R.drawable.ic_the_movie_db)    //TODO: adjust place holder image size
+                .into(holder.mMovieImageView, new ImageLoadedCallback() {
+                            @Override
+                            public void onSuccess() {
+                                holder.showOrHideLoadingIndicator(false);
+                            }
+                        }
                 );
         //TODO: loading fail case image (placeholder, error, progressbar)
+
+        holder.mMovieImageView.setContentDescription(movie.getTitle());
+    }
+
+    private class ImageLoadedCallback implements Callback {
+
+        @Override
+        public void onSuccess() {
+        }
+
+        @Override
+        public void onError(Exception e) {
+        }
     }
 
     @Override

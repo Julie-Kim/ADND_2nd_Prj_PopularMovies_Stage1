@@ -2,7 +2,11 @@ package com.udacity.popularmovies;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,26 +18,31 @@ import com.udacity.popularmovies.utilities.NetworkUtils;
 import java.net.URL;
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final int DEFAULT_POSTER_WIDTH = 540;
 
-    private RecyclerView mMovieRecyclerView;
+    @BindView(R.id.rv_movie_poster)
+    RecyclerView mMovieRecyclerView;
+
     private MovieAdapter mMovieAdapter;
 
-    //TODO: TextView - error message
-    //TODO: ProgressBar = loading indicator
+    @BindView(R.id.tv_empty_message)
+    TextView mEmptyMessage;
+
+    @BindView(R.id.pb_loading_indicator)
+    ProgressBar mLoadingIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mMovieRecyclerView = findViewById(R.id.rv_movie_poster);
-        //TODO: TextView - error message
-        //TODO: ProgressBar = loading indicator
+        ButterKnife.bind(this);
 
         AutoFitGridLayoutManager layoutManager = new AutoFitGridLayoutManager(this, DEFAULT_POSTER_WIDTH);
         mMovieRecyclerView.setLayoutManager(layoutManager);
@@ -46,9 +55,27 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     }
 
     private void loadMovieData() {
-        //TODO: show movie poster list & hide error message
+        showOrHideMovieData(true);
 
         new FetchMovieDataTask().execute(NetworkUtils.PARAM_POPULAR);
+    }
+
+    private void showOrHideMovieData(boolean show) {
+        if (show) {
+            mEmptyMessage.setVisibility(View.INVISIBLE);
+            mMovieRecyclerView.setVisibility(View.VISIBLE);
+        } else {
+            mMovieRecyclerView.setVisibility(View.INVISIBLE);
+            mEmptyMessage.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void showOrHideLoadingIndicator(boolean show) {
+        if (show) {
+            mLoadingIndicator.setVisibility(View.VISIBLE);
+        } else {
+            mLoadingIndicator.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -62,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         protected void onPreExecute() {
             super.onPreExecute();
 
-            //TODO: show loading indicator
+            showOrHideLoadingIndicator(true);
         }
 
         @Override
@@ -73,6 +100,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
             }
 
             String sortBy = params[0];
+            if (TextUtils.isEmpty(sortBy)) {
+                Log.e(TAG, "FetchMovieDataTask, wrong sortBy parameter.");
+                return null;
+            }
+
             URL movieRequestUrl = NetworkUtils.buildUrl(sortBy);
 
             String movieJsonResponse = NetworkUtils.getJsonResponse(movieRequestUrl);
@@ -87,13 +119,13 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         protected void onPostExecute(ArrayList<Movie> movies) {
             super.onPostExecute(movies);
 
-            //TODO: hide loading indicator
+            showOrHideLoadingIndicator(false);
 
-            if (!movies.isEmpty()) {
-                //TODO: if movie data is not empty, show movie data
+            if (movies != null && !movies.isEmpty()) {
+                showOrHideMovieData(true);
                 mMovieAdapter.setMovieData(movies);
             } else {
-                //TODO: if movie data is empty, hide movie data and show error message
+                showOrHideMovieData(false);
             }
         }
     }

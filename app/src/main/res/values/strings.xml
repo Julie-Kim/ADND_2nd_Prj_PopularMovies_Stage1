@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">ADND_2nd_Prj_PopularMovies_Stage1</string>
+    <string name="app_name">Popular Movies</string>
+
+    <string name="action_sort_by">Sort By</string>
+
+    <string name="empty_message">No movie data</string>
 </resources>
