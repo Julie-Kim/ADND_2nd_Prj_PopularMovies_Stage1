@@ -87,28 +87,21 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         Picasso.get()
                 .load(posterPath)
                 .fit()
-                .placeholder(R.drawable.ic_the_movie_db)    //TODO: adjust place holder image size
-                .into(holder.mMovieImageView, new ImageLoadedCallback() {
+                .noPlaceholder()
+                .error(R.drawable.error_image)
+                .into(holder.mMovieImageView, new Callback() {
                             @Override
                             public void onSuccess() {
                                 holder.showOrHideLoadingIndicator(false);
                             }
+
+                            @Override
+                            public void onError(Exception e) {
+                            }
                         }
                 );
-        //TODO: loading fail case image (placeholder, error, progressbar)
 
         holder.mMovieImageView.setContentDescription(movie.getTitle());
-    }
-
-    private class ImageLoadedCallback implements Callback {
-
-        @Override
-        public void onSuccess() {
-        }
-
-        @Override
-        public void onError(Exception e) {
-        }
     }
 
     @Override

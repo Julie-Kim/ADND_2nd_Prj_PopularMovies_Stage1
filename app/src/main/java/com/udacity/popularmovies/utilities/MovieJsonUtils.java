@@ -1,5 +1,6 @@
 package com.udacity.popularmovies.utilities;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.udacity.popularmovies.model.Movie;
@@ -24,6 +25,11 @@ public class MovieJsonUtils {
 
     public static ArrayList<Movie> parseMovieJson(String json) {
         ArrayList<Movie> movieList = new ArrayList<>();
+
+        if (json == null || TextUtils.isEmpty(json)) {
+            Log.e(TAG, "parseMovieJson() json string is empty.");
+            return movieList;
+        }
 
         try {
             JSONObject movieObject = new JSONObject(json);

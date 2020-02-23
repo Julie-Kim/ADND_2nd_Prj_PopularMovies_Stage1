@@ -108,11 +108,15 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
             URL movieRequestUrl = NetworkUtils.buildUrl(sortBy);
 
             String movieJsonResponse = NetworkUtils.getJsonResponse(movieRequestUrl);
-            ArrayList<Movie> movieList = MovieJsonUtils.parseMovieJson(movieJsonResponse);
+            if (movieJsonResponse != null) {
+                ArrayList<Movie> movieList = MovieJsonUtils.parseMovieJson(movieJsonResponse);
+                Log.d(TAG, "FetchMovieDataTask, size of movieList: " + movieList.size());
 
-            Log.d(TAG, "FetchMovieDataTask, size of movieList: " + movieList.size());
-
-            return movieList;
+                return movieList;
+            } else {
+                Log.e(TAG, "FetchMovieDataTask, No json response.");
+                return null;
+            }
         }
 
         @Override

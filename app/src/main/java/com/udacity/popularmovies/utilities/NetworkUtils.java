@@ -1,6 +1,7 @@
 package com.udacity.popularmovies.utilities;
 
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.IOException;
@@ -23,6 +24,10 @@ public class NetworkUtils {
     private static final String API_KEY = "";   //Your own API Key is required.
 
     public static URL buildUrl(String sortBy) {
+        if (TextUtils.isEmpty(API_KEY)) {
+            Log.e(TAG, "buildUri(), no API Key. Please add your own API Key in NetworkUtils.java");
+        }
+
         Uri uri = Uri.parse(BASE_MOVIE_URL).buildUpon()
                 .appendPath(sortBy)
                 .appendQueryParameter(PARAM_API_KEY, API_KEY)
