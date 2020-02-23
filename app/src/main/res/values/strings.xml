@@ -1,7 +1,11 @@
 <resources>
     <string name="app_name">Popular Movies</string>
 
+    <string name="action_refresh">Refresh</string>
     <string name="action_sort_by">Sort By</string>
 
-    <string name="empty_message">No movie data</string>
+    <string name="most_popular">Most popular</string>
+    <string name="top_rated">Top rated</string>
+
+    <string name="empty_message">No movie data.</string>
 </resources>

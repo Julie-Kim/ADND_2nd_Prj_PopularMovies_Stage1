@@ -4,10 +4,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -131,6 +134,29 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
             } else {
                 showOrHideMovieData(false);
             }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+                mMovieAdapter.setMovieData(new ArrayList<>());
+
+                loadMovieData();
+                return true;
+
+            case R.id.action_sortby:
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }
