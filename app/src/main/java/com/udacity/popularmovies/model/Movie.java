@@ -23,7 +23,7 @@ public class Movie implements Parcelable {
         mReleaseDate = releaseDate;
     }
 
-    public Movie(Parcel parcel) {
+    private Movie(Parcel parcel) {
         mTitle = parcel.readString();
         mOriginalTitle = parcel.readString();
         mPosterPath = parcel.readString();

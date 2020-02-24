@@ -8,7 +8,7 @@
     <string name="action_sort_by">Sort By</string>
 
     <string name="most_popular">Most popular</string>
-    <string name="top_rated">Top rated</string>
+    <string name="highest_rated">Highest rated</string>
 
     <string name="empty_message">No movie data.</string>
 

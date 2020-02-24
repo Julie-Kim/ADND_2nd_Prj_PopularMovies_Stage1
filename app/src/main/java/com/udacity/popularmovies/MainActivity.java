@@ -21,6 +21,7 @@ import com.udacity.popularmovies.utilities.MovieJsonUtils;
 import com.udacity.popularmovies.utilities.NetworkUtils;
 import com.udacity.popularmovies.utilities.PreferenceUtils;
 
+import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         String softBy = NetworkUtils.getSoftByParam(this);
         Log.d(TAG, "loadMovieData() softBy " + softBy);
 
-        new FetchMovieDataTask().execute(softBy);
+        new FetchMovieDataTask(this).execute(softBy);
     }
 
     private void showOrHideMovieData(boolean show) {
@@ -95,13 +96,25 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         startActivity(intent);
     }
 
-    public class FetchMovieDataTask extends AsyncTask<String, Void, ArrayList<Movie>> {
+    private static class FetchMovieDataTask extends AsyncTask<String, Void, ArrayList<Movie>> {
+
+        private WeakReference<MainActivity> mActivityReference;
+
+        FetchMovieDataTask(MainActivity activity) {
+            mActivityReference = new WeakReference<>(activity);
+        }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
 
-            showOrHideLoadingIndicator(true);
+            MainActivity activity = mActivityReference.get();
+            if (activity == null || activity.isFinishing()) {
+                Log.e(TAG, "FetchMovieDataTask, onPreExecute() activity is null or is finishing.");
+                return;
+            }
+
+            activity.showOrHideLoadingIndicator(true);
         }
 
         @Override
@@ -135,14 +148,24 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         protected void onPostExecute(ArrayList<Movie> movies) {
             super.onPostExecute(movies);
 
-            showOrHideLoadingIndicator(false);
-
-            if (movies != null && !movies.isEmpty()) {
-                showOrHideMovieData(true);
-                mMovieAdapter.setMovieData(movies);
-            } else {
-                showOrHideMovieData(false);
+            MainActivity activity = mActivityReference.get();
+            if (activity == null || activity.isFinishing()) {
+                Log.e(TAG, "FetchMovieDataTask, onPostExecute() activity is null or is finishing.");
+                return;
             }
+
+            activity.updateMovieData(movies);
+        }
+    }
+
+    private void updateMovieData(ArrayList<Movie> movies) {
+        showOrHideLoadingIndicator(false);
+
+        if (movies != null && !movies.isEmpty()) {
+            showOrHideMovieData(true);
+            mMovieAdapter.setMovieData(movies);
+        } else {
+            showOrHideMovieData(false);
         }
     }
 
@@ -161,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
                 loadMovieData();
                 return true;
 
-            case R.id.action_sortby:
+            case R.id.action_sort_by:
                 showSortBySelectionDialog();
                 return true;
 
@@ -182,8 +205,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
                             Log.d(TAG, "showSortBySelectionDialog() clicked item: " + which);
                             PreferenceUtils.setSoftBySettingValue(MainActivity.this, which);
                         })
-                .setPositiveButton(R.string.ok, (dialog12, which) -> {
-                    loadMovieData();
-                }).create().show();
+                .setPositiveButton(R.string.ok, (dialog12, which) -> loadMovieData()).create().show();
     }
 }

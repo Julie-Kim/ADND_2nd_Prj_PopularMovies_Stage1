@@ -13,7 +13,6 @@ class AutoFitGridLayoutManager extends GridLayoutManager {
     private static final int DEFAULT_GRID_SPAN_COUNT = 2;
 
     private int mColumnWidth;
-    private int mSpanCount;
 
     AutoFitGridLayoutManager(Context context, int columnWidth) {
         super(context, DEFAULT_GRID_SPAN_COUNT);
@@ -30,10 +29,10 @@ class AutoFitGridLayoutManager extends GridLayoutManager {
 
     private void updateSpanCount() {
         int screenWidth = (getOrientation() == RecyclerView.VERTICAL) ? getWidth() : getHeight();
-        mSpanCount = Math.max(DEFAULT_GRID_SPAN_COUNT, screenWidth / mColumnWidth);
+        int spanCount = Math.max(DEFAULT_GRID_SPAN_COUNT, screenWidth / mColumnWidth);
 
-        Log.d(TAG, "updateSpanCount() mSpanCount = " + mSpanCount);
-        setSpanCount(mSpanCount);
+        Log.d(TAG, "updateSpanCount() spanCount = " + spanCount);
+        setSpanCount(spanCount);
     }
 
     @Override

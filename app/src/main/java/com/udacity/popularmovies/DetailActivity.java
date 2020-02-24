@@ -19,6 +19,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,7 +30,7 @@ public class DetailActivity extends AppCompatActivity {
 
     public static final String KEY_MOVIE = "movie";
 
-    public static final String VOTE_TOTAL = "/10";
+    private static final String VOTE_TOTAL = "/10";
 
     @BindView(R.id.tv_original_title)
     TextView mOriginalTitle;
@@ -57,18 +58,18 @@ public class DetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent == null) {
-            Log.e(TAG, "onCreat() intent is null.");
+            Log.e(TAG, "onCreate() intent is null.");
             return;
         }
 
         if (!intent.hasExtra(KEY_MOVIE)) {
-            Log.e(TAG, "onCreat() no movie intent data.");
+            Log.e(TAG, "onCreate() no movie intent data.");
             return;
         }
 
         Movie movie = intent.getParcelableExtra(KEY_MOVIE);
         if (movie == null) {
-            Log.e(TAG, "onCreat() movie data is null.");
+            Log.e(TAG, "onCreate() movie data is null.");
             return;
         }
 
@@ -108,7 +109,7 @@ public class DetailActivity extends AppCompatActivity {
                 );
     }
 
-    void showOrHideLoadingIndicator(boolean show) {
+    private void showOrHideLoadingIndicator(boolean show) {
         if (show) {
             mImageLoadingIndicator.setVisibility(View.VISIBLE);
         } else {
@@ -121,7 +122,7 @@ public class DetailActivity extends AppCompatActivity {
             Calendar calendar = Calendar.getInstance();
 
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            calendar.setTime(formatter.parse(releaseDate));
+            calendar.setTime(Objects.requireNonNull(formatter.parse(releaseDate)));
 
             releaseDate = String.valueOf(calendar.get(Calendar.YEAR));
         } catch (ParseException e) {
