@@ -1,5 +1,6 @@
 package com.udacity.popularmovies;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -88,7 +89,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     @Override
     public void onClick(Movie movie) {
-        //TODO: start DetailActivity by intent
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra(DetailActivity.KEY_MOVIE, movie);
+
+        startActivity(intent);
     }
 
     public class FetchMovieDataTask extends AsyncTask<String, Void, ArrayList<Movie>> {

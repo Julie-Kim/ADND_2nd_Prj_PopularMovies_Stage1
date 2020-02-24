@@ -18,6 +18,7 @@ public final class MovieJsonUtils {
     private static final String JSON_TAG_RESULTS = "results";
 
     private static final String JSON_TAG_TITLE = "title";
+    private static final String JSON_TAG_ORIGINAL_TITLE = "original_title";
     private static final String JSON_TAG_POSTER_PATH = "poster_path";
     private static final String JSON_TAG_OVERVIEW = "overview";
     private static final String JSON_TAG_VOTE_AVERAGE = "vote_average";
@@ -40,12 +41,13 @@ public final class MovieJsonUtils {
                     JSONObject resultObject = resultsArray.optJSONObject(i);
 
                     String title = resultObject.optString(JSON_TAG_TITLE);
+                    String originalTitle = resultObject.optString(JSON_TAG_ORIGINAL_TITLE);
                     String posterPath = resultObject.optString(JSON_TAG_POSTER_PATH);
                     String overview = resultObject.optString(JSON_TAG_OVERVIEW);
-                    int voteAverage = resultObject.optInt(JSON_TAG_VOTE_AVERAGE);
+                    float voteAverage = (float) resultObject.optDouble(JSON_TAG_VOTE_AVERAGE);
                     String releaseDate = resultObject.optString(JSON_TAG_RELEASE_DATE);
 
-                    Movie movie = new Movie(title, posterPath, overview, voteAverage, releaseDate);
+                    Movie movie = new Movie(title, originalTitle, posterPath, overview, voteAverage, releaseDate);
                     Log.d(TAG, "[" + i + "] " + movie.toString());
                     movieList.add(movie);
                 }

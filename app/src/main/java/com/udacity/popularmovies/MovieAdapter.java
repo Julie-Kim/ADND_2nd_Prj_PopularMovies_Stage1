@@ -38,7 +38,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     public class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        @BindView(R.id.iv_movie_poster)
+        @BindView(R.id.iv_poster_image)
         ImageView mMovieImageView;
 
         @BindView(R.id.pb_image_loading_indicator)
@@ -97,6 +97,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
                             @Override
                             public void onError(Exception e) {
+                                holder.showOrHideLoadingIndicator(false);
                             }
                         }
                 );
