@@ -11,7 +11,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class MovieJsonUtils {
+public final class MovieJsonUtils {
 
     private static final String TAG = MovieJsonUtils.class.getSimpleName();
 

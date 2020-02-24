@@ -11,12 +11,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.udacity.popularmovies.model.Movie;
 import com.udacity.popularmovies.utilities.MovieJsonUtils;
 import com.udacity.popularmovies.utilities.NetworkUtils;
+import com.udacity.popularmovies.utilities.PreferenceUtils;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -60,7 +62,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     private void loadMovieData() {
         showOrHideMovieData(true);
 
-        new FetchMovieDataTask().execute(NetworkUtils.PARAM_POPULAR);
+        String softBy = NetworkUtils.getSoftByParam(this);
+        Log.d(TAG, "loadMovieData() softBy " + softBy);
+
+        new FetchMovieDataTask().execute(softBy);
     }
 
     private void showOrHideMovieData(boolean show) {
@@ -153,10 +158,28 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
                 return true;
 
             case R.id.action_sortby:
+                showSortBySelectionDialog();
                 return true;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void showSortBySelectionDialog() {
+        int checkedItem = PreferenceUtils.getSoftBySettingValue(this);
+        Log.d(TAG, "showSortBySelectionDialog() checked item: " + checkedItem);
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle(R.string.action_sort_by)
+                .setSingleChoiceItems(R.array.sort_by_setting_strings,
+                        checkedItem,
+                        (dialog1, which) -> {
+                            Log.d(TAG, "showSortBySelectionDialog() clicked item: " + which);
+                            PreferenceUtils.setSoftBySettingValue(MainActivity.this, which);
+                        })
+                .setPositiveButton(R.string.ok, (dialog12, which) -> {
+                    loadMovieData();
+                }).create().show();
     }
 }

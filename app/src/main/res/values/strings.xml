@@ -8,4 +8,6 @@
     <string name="top_rated">Top rated</string>
 
     <string name="empty_message">No movie data.</string>
+
+    <string name="ok">OK</string>
 </resources>

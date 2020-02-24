@@ -1,5 +1,6 @@
 package com.udacity.popularmovies.utilities;
 
+import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,14 +12,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
-public class NetworkUtils {
+public final class NetworkUtils {
 
     private static final String TAG = NetworkUtils.class.toString();
 
     private static final String BASE_MOVIE_URL = "http://api.themoviedb.org/3/movie/";
 
-    public static final String PARAM_POPULAR = "popular";
-    public static final String PARAM_TOP_RATED = "top_rated";
+    private static final String PARAM_POPULAR = "popular";
+    private static final String PARAM_TOP_RATED = "top_rated";
 
     private static final String PARAM_API_KEY = "api_key";
     private static final String API_KEY = "";   //Your own API Key is required.
@@ -74,5 +75,14 @@ public class NetworkUtils {
         }
 
         return null;
+    }
+
+    public static String getSoftByParam(Context context) {
+        int value = PreferenceUtils.getSoftBySettingValue(context);
+
+        if (value == 1) {
+            return PARAM_TOP_RATED;
+        }
+        return PARAM_POPULAR;
     }
 }
