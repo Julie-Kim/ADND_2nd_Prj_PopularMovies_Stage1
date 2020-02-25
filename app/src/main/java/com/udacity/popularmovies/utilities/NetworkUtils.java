@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.udacity.popularmovies.BuildConfig;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -22,7 +24,7 @@ public final class NetworkUtils {
     private static final String PARAM_TOP_RATED = "top_rated";
 
     private static final String PARAM_API_KEY = "api_key";
-    private static final String API_KEY = "";   //Your own API Key is required.
+    private static final String API_KEY = BuildConfig.API_KEY;
 
     public static URL buildUrl(String sortBy) {
         if (TextUtils.isEmpty(API_KEY)) {
